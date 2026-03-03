@@ -1,0 +1,76 @@
+{
+  "productos": [
+    {
+      "id": 1,
+      "codigo": "SB-ROS-001",
+      "nombre": "Ramo de 12 Rosas Rojas",
+      "categoria": "rosas",
+      "descripcion": "Rosas frescas importadas con follaje selecto y moño de regalo. Incluye tarjeta personalizada.",
+      "stock": 15,
+      "precioRegular": 25000,
+      "precioTemporada": 20000,
+      "precioTemporadaActivo": false,
+      "imagenes": ["https://images.unsplash.com/photo-1518709766631-a6a7f45921c3?w=600"],
+      "activo": true,
+      "destacado": true
+    },
+    {
+      "id": 2,
+      "codigo": "SB-ARR-001",
+      "nombre": "Arreglo Floral Premium",
+      "categoria": "arreglos",
+      "descripcion": "Mix de flores de temporada en base de madera rústica. Ideal para cumpleaños y aniversarios.",
+      "stock": 8,
+      "precioRegular": 35000,
+      "precioTemporada": null,
+      "precioTemporadaActivo": false,
+      "imagenes": ["https://images.unsplash.com/photo-1563241527-3004b7be0ee9?w=600"],
+      "activo": true,
+      "destacado": true
+    },
+    {
+      "id": 3,
+      "codigo": "SB-PLA-001",
+      "nombre": "Orquídea Phalaenopsis",
+      "categoria": "plantas",
+      "descripcion": "Orquídea blanca en maceta cerámica. Planta duradera y elegante para interiores.",
+      "stock": 12,
+      "precioRegular": 28000,
+      "precioTemporada": 24000,
+      "precioTemporadaActivo": true,
+      "imagenes": ["https://images.unsplash.com/photo-1566638766429-506649f9c25d?w=600"],
+      "activo": true,
+      "destacado": false
+    }
+  ],
+  "categorias": [
+    {
+      "id": "rosas",
+      "nombre": "Rosas",
+      "icono": "🌹",
+      "orden": 1,
+      "activa": true
+    },
+    {
+      "id": "arreglos",
+      "nombre": "Arreglos Florales",
+      "icono": "💐",
+      "orden": 2,
+      "activa": true
+    },
+    {
+      "id": "plantas",
+      "nombre": "Plantas",
+      "icono": "🪴",
+      "orden": 3,
+      "activa": true
+    }
+  ],
+  "config": {
+    "nombre": "Floristería Santa Bárbara",
+    "whatsapp": "50686053613",
+    "tarifaExpress": 650,
+    "horario": "Lunes a Sábado 7am - 7pm, Domingo 8am - 2pm"
+  },
+  "fechaActualizacion": "2024-01-15T10:00:00.000Z"
+}
