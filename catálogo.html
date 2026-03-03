@@ -3,132 +3,274 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carrito | Floristería Santa Bárbara</title>
+    <title>Catálogo | Floristería Santa Bárbara</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        .product-card { transition: all 0.3s ease; }
+        .product-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
+        .filtro-activo { background-color: #2D5A3D !important; color: white !important; }
+    </style>
 </head>
-<body class="font-sans bg-gray-50 text-gray-900 min-h-screen">
+<body class="font-sans bg-gray-50 text-gray-900">
     
     <!-- Header -->
-    <header class="bg-white shadow-sm">
-        <div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
+    <header class="fixed w-full top-0 z-50 bg-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
             <a href="https://k3sb12.github.io/Florist-Santa-B-rbara-/" class="flex items-center gap-2">
                 <span class="text-2xl">🌸</span>
                 <span class="font-serif text-xl font-bold text-green-800">Santa Bárbara</span>
             </a>
-            <a href="https://k3sb12.github.io/Florist-Santa-B-rbara-/catalogo.html" class="text-gray-600 hover:text-green-800">
-                ← Seguir comprando
-            </a>
+            <div class="flex items-center gap-4">
+                <a href="https://k3sb12.github.io/Florist-Santa-B-rbara-/carrito.html" class="relative">
+                    <i class="fas fa-shopping-bag text-xl text-gray-600"></i>
+                    <span id="cartCount" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center hidden">0</span>
+                </a>
+            </div>
         </div>
     </header>
 
     <!-- Main -->
-    <main class="max-w-4xl mx-auto px-4 py-8">
-        <h1 class="font-serif text-3xl mb-6">Tu Carrito</h1>
-        
-        <!-- Vacío -->
-        <div id="vacio" class="hidden text-center py-12">
-            <i class="fas fa-shopping-bag text-6xl text-gray-300 mb-4"></i>
-            <p class="text-gray-500 mb-4">Tu carrito está vacío</p>
-            <a href="https://k3sb12.github.io/Florist-Santa-B-rbara-/catalogo.html" class="bg-green-800 text-white px-6 py-3 rounded-lg inline-block">Ver catálogo</a>
-        </div>
-        
-        <!-- Con items -->
-        <div id="conItems" class="hidden">
-            <div id="items" class="space-y-4 mb-6"></div>
+    <main class="pt-20 pb-16">
+        <div class="max-w-7xl mx-auto px-4">
             
-            <div class="bg-white rounded-xl shadow-md p-6">
-                <div class="flex justify-between items-center mb-4">
-                    <span class="text-lg font-semibold">Total:</span>
-                    <span id="total" class="text-3xl font-bold text-green-800">₡0</span>
-                </div>
-                
-                <div class="flex gap-4">
-                    <button onclick="vaciar()" class="flex-1 py-3 border-2 border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
-                        Vaciar
-                    </button>
-                    <button onclick="alert('Checkout en construcción')" class="flex-1 bg-green-800 text-white py-3 rounded-lg font-semibold hover:bg-green-700">
-                        Pagar →
-                    </button>
-                </div>
+            <h1 class="font-serif text-3xl mb-6">Nuestro Catálogo</h1>
+            
+            <!-- Filtros -->
+            <div class="flex gap-3 overflow-x-auto pb-4 mb-6" id="filtros">
+                <button onclick="filtrar('todos')" id="btn-todos" class="filtro-activo px-4 py-2 rounded-full border-2 border-green-800 bg-green-800 text-white font-medium">
+                    Todos
+                </button>
+                <button onclick="filtrar('rosas')" id="btn-rosas" class="px-4 py-2 rounded-full border-2 border-gray-300 text-gray-700 font-medium hover:border-green-800">
+                    🌹 Rosas
+                </button>
+                <button onclick="filtrar('arreglos')" id="btn-arreglos" class="px-4 py-2 rounded-full border-2 border-gray-300 text-gray-700 font-medium hover:border-green-800">
+                    💐 Arreglos
+                </button>
+                <button onclick="filtrar('plantas')" id="btn-plantas" class="px-4 py-2 rounded-full border-2 border-gray-300 text-gray-700 font-medium hover:border-green-800">
+                    🪴 Plantas
+                </button>
             </div>
+            
+            <!-- Productos -->
+            <div id="productos" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Los productos se insertan aquí -->
+            </div>
+            
         </div>
     </main>
 
     <script>
-        const CARRITO_KEY = 'sb_carrito';
+        // ==========================================
+        // DATOS EMBEBIDOS (NO NECESITA JSON EXTERNO)
+        // ==========================================
         
-        function cargar() {
-            const carrito = JSON.parse(localStorage.getItem(CARRITO_KEY) || '[]');
+        const PRODUCTOS = [
+            {
+                id: 1,
+                codigo: "SB-ROS-001",
+                nombre: "Ramo de 12 Rosas Rojas",
+                categoria: "rosas",
+                descripcion: "Rosas frescas importadas con follaje selecto",
+                precioRegular: 25000,
+                precioTemporada: 20000,
+                precioTemporadaActivo: false,
+                stock: 15,
+                activo: true,
+                imagen: "https://images.unsplash.com/photo-1518709766631-a6a7f45921c3?w=600"
+            },
+            {
+                id: 2,
+                codigo: "SB-ROS-002",
+                nombre: "Ramo de 24 Rosas Premium",
+                categoria: "rosas",
+                descripcion: "El doble de amor, el doble de belleza",
+                precioRegular: 45000,
+                precioTemporada: 38000,
+                precioTemporadaActivo: true,
+                stock: 8,
+                activo: true,
+                imagen: "https://images.unsplash.com/photo-1561181286-d3fee7d55364?w=600"
+            },
+            {
+                id: 3,
+                codigo: "SB-ARR-001",
+                nombre: "Arreglo Floral Premium",
+                categoria: "arreglos",
+                descripcion: "Mix de flores de temporada en base rústica",
+                precioRegular: 35000,
+                precioTemporada: null,
+                precioTemporadaActivo: false,
+                stock: 10,
+                activo: true,
+                imagen: "https://images.unsplash.com/photo-1563241527-3004b7be0ee9?w=600"
+            },
+            {
+                id: 4,
+                codigo: "SB-ARR-002",
+                nombre: "Centro de Mesa Elegante",
+                categoria: "arreglos",
+                descripcion: "Perfecto para eventos y celebraciones",
+                precioRegular: 42000,
+                precioTemporada: 35000,
+                precioTemporadaActivo: false,
+                stock: 5,
+                activo: true,
+                imagen: "https://images.unsplash.com/photo-1487530811176-3780de880c2d?w=600"
+            },
+            {
+                id: 5,
+                codigo: "SB-PLA-001",
+                nombre: "Orquídea Phalaenopsis",
+                categoria: "plantas",
+                descripcion: "Elegante orquídea blanca en maceta cerámica",
+                precioRegular: 28000,
+                precioTemporada: 24000,
+                precioTemporadaActivo: true,
+                stock: 12,
+                activo: true,
+                imagen: "https://images.unsplash.com/photo-1566638766429-506649f9c25d?w=600"
+            },
+            {
+                id: 6,
+                codigo: "SB-PLA-002",
+                nombre: "Bonsai Ficus",
+                categoria: "plantas",
+                descripcion: "Arte japonés en miniatura",
+                precioRegular: 35000,
+                precioTemporada: null,
+                precioTemporadaActivo: false,
+                stock: 7,
+                activo: true,
+                imagen: "https://images.unsplash.com/photo-1599598425947-d35101f97d6c?w=600"
+            }
+        ];
+        
+        // ==========================================
+        // FUNCIONES
+        // ==========================================
+        
+        function getPrecio(producto) {
+            if (producto.precioTemporadaActivo && producto.precioTemporada) {
+                return producto.precioTemporada;
+            }
+            return producto.precioRegular;
+        }
+        
+        function renderizarProductos(lista) {
+            const container = document.getElementById('productos');
             
-            if (carrito.length === 0) {
-                document.getElementById('vacio').classList.remove('hidden');
-                document.getElementById('conItems').classList.add('hidden');
+            if (lista.length === 0) {
+                container.innerHTML = '<p class="col-span-full text-center py-8 text-gray-500">No hay productos en esta categoría</p>';
                 return;
             }
             
-            document.getElementById('vacio').classList.add('hidden');
-            document.getElementById('conItems').classList.remove('hidden');
-            
-            // Renderizar items
-            document.getElementById('items').innerHTML = carrito.map((item, i) => `
-                <div class="bg-white rounded-xl shadow-sm p-4 flex gap-4">
-                    <img src="${item.imagen}" class="w-20 h-20 object-cover rounded-lg" onerror="this.src='https://via.placeholder.com/100'">
-                    <div class="flex-1">
-                        <h3 class="font-semibold">${item.nombre}</h3>
-                        <p class="text-green-800 font-semibold">₡${item.precioUnitario.toLocaleString()} c/u</p>
-                        
-                        <div class="flex items-center gap-4 mt-2">
-                            <div class="flex items-center border rounded">
-                                <button onclick="cambiar(${i}, -1)" class="px-3 py-1 hover:bg-gray-100">-</button>
-                                <span class="px-3 py-1 font-medium">${item.cantidad}</span>
-                                <button onclick="cambiar(${i}, 1)" class="px-3 py-1 hover:bg-gray-100">+</button>
+            container.innerHTML = lista.map(p => {
+                const precio = getPrecio(p);
+                const tieneOferta = p.precioTemporadaActivo && p.precioTemporada;
+                
+                return `
+                    <div class="product-card bg-white rounded-xl shadow-md overflow-hidden">
+                        <div class="relative h-64 bg-gray-100">
+                            <img src="${p.imagen}" alt="${p.nombre}" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/400x400?text=Sin+Imagen'">
+                            ${tieneOferta ? `<span class="absolute top-2 left-2 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold">OFERTA</span>` : ''}
+                        </div>
+                        <div class="p-4">
+                            <span class="text-xs text-green-700 font-semibold uppercase">${p.categoria}</span>
+                            <h3 class="font-serif text-lg font-semibold mt-1 mb-2">${p.nombre}</h3>
+                            <p class="text-gray-600 text-sm mb-3">${p.descripcion}</p>
+                            
+                            <div class="flex items-baseline gap-2 mb-4">
+                                <span class="text-2xl font-bold text-green-800">₡${precio.toLocaleString()}</span>
+                                ${tieneOferta ? `<span class="text-sm text-gray-400 line-through">₡${p.precioRegular.toLocaleString()}</span>` : ''}
                             </div>
-                            <span class="font-bold">₡${item.subtotal.toLocaleString()}</span>
-                            <button onclick="eliminar(${i})" class="ml-auto text-red-500 hover:text-red-700">
-                                <i class="fas fa-trash"></i>
+                            
+                            <button onclick="agregarAlCarrito(${p.id})" class="w-full bg-green-800 hover:bg-green-700 text-white py-3 rounded-lg font-semibold transition-colors">
+                                <i class="fas fa-shopping-bag mr-2"></i>Agregar al carrito
                             </button>
                         </div>
                     </div>
-                </div>
-            `).join('');
-            
-            // Total
-            const total = carrito.reduce((sum, item) => sum + item.subtotal, 0);
-            document.getElementById('total').textContent = '₡' + total.toLocaleString();
+                `;
+            }).join('');
         }
         
-        function cambiar(index, delta) {
-            let carrito = JSON.parse(localStorage.getItem(CARRITO_KEY));
-            carrito[index].cantidad += delta;
+        function filtrar(categoria) {
+            // Actualizar botones
+            document.querySelectorAll('[id^="btn-"]').forEach(btn => {
+                btn.classList.remove('filtro-activo');
+                btn.classList.add('border-gray-300', 'text-gray-700');
+                btn.classList.remove('border-green-800', 'bg-green-800', 'text-white');
+            });
             
-            if (carrito[index].cantidad <= 0) {
-                carrito.splice(index, 1);
+            const btnActivo = document.getElementById('btn-' + categoria);
+            btnActivo.classList.add('filtro-activo');
+            btnActivo.classList.remove('border-gray-300', 'text-gray-700');
+            
+            // Filtrar productos
+            const filtrados = categoria === 'todos' 
+                ? PRODUCTOS 
+                : PRODUCTOS.filter(p => p.categoria === categoria);
+            
+            renderizarProductos(filtrados);
+        }
+        
+        function agregarAlCarrito(id) {
+            const producto = PRODUCTOS.find(p => p.id === id);
+            if (!producto) return;
+            
+            // Obtener carrito actual
+            let carrito = JSON.parse(localStorage.getItem('sb_carrito') || '[]');
+            
+            const existente = carrito.find(item => item.id === id);
+            if (existente) {
+                existente.cantidad++;
+                existente.subtotal = existente.cantidad * existente.precio;
             } else {
-                carrito[index].subtotal = carrito[index].cantidad * carrito[index].precioUnitario;
+                carrito.push({
+                    id: producto.id,
+                    nombre: producto.nombre,
+                    precio: getPrecio(producto),
+                    precioUnitario: getPrecio(producto),
+                    imagen: producto.imagen,
+                    cantidad: 1,
+                    subtotal: getPrecio(producto)
+                });
             }
             
-            localStorage.setItem(CARRITO_KEY, JSON.stringify(carrito));
-            cargar();
+            // Guardar
+            localStorage.setItem('sb_carrito', JSON.stringify(carrito));
+            
+            // Actualizar contador
+            actualizarContador();
+            
+            // Feedback
+            alert(`${producto.nombre} agregado al carrito`);
         }
         
-        function eliminar(index) {
-            if (!confirm('¿Eliminar?')) return;
-            let carrito = JSON.parse(localStorage.getItem(CARRITO_KEY));
-            carrito.splice(index, 1);
-            localStorage.setItem(CARRITO_KEY, JSON.stringify(carrito));
-            cargar();
+        function actualizarContador() {
+            const carrito = JSON.parse(localStorage.getItem('sb_carrito') || '[]');
+            const total = carrito.reduce((sum, item) => sum + item.cantidad, 0);
+            
+            const badge = document.getElementById('cartCount');
+            if (total > 0) {
+                badge.textContent = total;
+                badge.classList.remove('hidden');
+            }
         }
         
-        function vaciar() {
-            if (!confirm('¿Vaciar todo?')) return;
-            localStorage.removeItem(CARRITO_KEY);
-            cargar();
-        }
+        // ==========================================
+        // INICIAR
+        // ==========================================
         
-        // Cargar al iniciar
-        document.addEventListener('DOMContentLoaded', cargar);
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Catálogo iniciando...');
+            console.log('Productos:', PRODUCTOS.length);
+            
+            renderizarProductos(PRODUCTOS);
+            actualizarContador();
+        });
     </script>
 </body>
 </html>
