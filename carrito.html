@@ -7,84 +7,49 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        sb: { green: '#2D5A3D', 'green-light': '#4A7C59', cream: '#F5F1E8', rose: '#C41E3A', 'rose-soft': '#E8B4B8', gold: '#D4AF37', dark: '#1A1A1A' }
-                    },
-                    fontFamily: { serif: ['Playfair Display', 'serif'], sans: ['Inter', 'sans-serif'] }
-                }
-            }
-        }
-    </script>
 </head>
-<body class="font-sans bg-sb-cream text-sb-dark min-h-screen">
+<body class="font-sans bg-gray-50 text-gray-900 min-h-screen">
     
     <!-- Header -->
-    <header class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+    <header class="bg-white shadow-sm">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
             <a href="index.html" class="flex items-center gap-2">
                 <span class="text-2xl">🌸</span>
-                <span class="font-serif text-xl font-bold text-sb-green">Santa Bárbara</span>
+                <span class="font-serif text-xl font-bold text-green-800">Santa Bárbara</span>
             </a>
-            <a href="catalogo.html" class="text-gray-600 hover:text-sb-green flex items-center gap-2">
-                <i class="fas fa-arrow-left"></i>
-                Seguir comprando
+            <a href="catalogo.html" class="text-gray-600 hover:text-green-800">
+                ← Seguir comprando
             </a>
         </div>
     </header>
 
     <!-- Main -->
     <main class="max-w-4xl mx-auto px-4 py-8">
-        <h1 class="font-serif text-3xl mb-8">Tu Carrito</h1>
+        <h1 class="font-serif text-3xl mb-6">Tu Carrito</h1>
         
-        <!-- Carrito vacío (oculto por defecto) -->
-        <div id="carritoVacio" class="hidden text-center py-16">
+        <!-- Vacío -->
+        <div id="vacio" class="hidden text-center py-12">
             <i class="fas fa-shopping-bag text-6xl text-gray-300 mb-4"></i>
-            <h2 class="font-serif text-2xl text-gray-600 mb-2">Tu carrito está vacío</h2>
-            <p class="text-gray-500 mb-6">¡Agrega algunos productos!</p>
-            <a href="catalogo.html" class="inline-block bg-sb-green text-white px-8 py-4 rounded-xl font-semibold hover:bg-sb-green-light transition-colors">
-                Ver catálogo
-            </a>
+            <p class="text-gray-500 mb-4">Tu carrito está vacío</p>
+            <a href="catalogo.html" class="bg-green-800 text-white px-6 py-3 rounded-lg inline-block">Ver catálogo</a>
         </div>
         
-        <!-- Carrito con items -->
-        <div id="carritoConItems" class="hidden">
-            <!-- Lista de items -->
-            <div id="listaItems" class="space-y-4 mb-8">
-                <!-- Se renderiza dinámicamente -->
-            </div>
+        <!-- Con items -->
+        <div id="conItems" class="hidden">
+            <div id="items" class="space-y-4 mb-6"></div>
             
-            <!-- Resumen -->
-            <div class="bg-white rounded-2xl shadow-lg p-6">
-                <h3 class="font-serif text-xl mb-4">Resumen del pedido</h3>
-                
-                <div class="space-y-2 mb-4 pb-4 border-b">
-                    <div class="flex justify-between">
-                        <span class="text-gray-600">Subtotal</span>
-                        <span id="subtotal" class="font-semibold">₡0</span>
-                    </div>
-                    <div class="flex justify-between text-sm text-gray-500">
-                        <span>Express se calcula en el checkout</span>
-                    </div>
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-semibold">Total:</span>
+                    <span id="total" class="text-3xl font-bold text-green-800">₡0</span>
                 </div>
                 
-                <div class="flex justify-between items-center mb-6">
-                    <span class="text-lg font-semibold">Total estimado</span>
-                    <span id="total" class="text-3xl font-bold text-sb-green">₡0</span>
-                </div>
-                
-                <div class="flex flex-col sm:flex-row gap-4">
-                    <button onclick="vaciarCarrito()" class="sm:flex-1 py-4 rounded-xl border-2 border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 transition-colors">
-                        Vaciar carrito
+                <div class="flex gap-4">
+                    <button onclick="vaciar()" class="flex-1 py-3 border-2 border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
+                        Vaciar
                     </button>
-                    <a href="checkout.html" class="sm:flex-1 bg-sb-green text-white py-4 rounded-xl font-semibold text-center hover:bg-sb-green-light transition-colors flex items-center justify-center gap-2">
-                        Proceder al pago
-                        <i class="fas fa-arrow-right"></i>
+                    <a href="checkout.html" class="flex-1 bg-green-800 text-white py-3 rounded-lg text-center font-semibold hover:bg-green-700">
+                        Pagar →
                     </a>
                 </div>
             </div>
@@ -92,57 +57,36 @@
     </main>
 
     <script>
-        // ==========================================
-        // CARRITO - LOCALSTORAGE (PERSISTE ENTRE PÁGINAS)
-        // ==========================================
-        
         const CARRITO_KEY = 'sb_carrito';
         
-        function cargarCarrito() {
+        function cargar() {
             const carrito = JSON.parse(localStorage.getItem(CARRITO_KEY) || '[]');
             
             if (carrito.length === 0) {
-                mostrarCarritoVacio();
-            } else {
-                mostrarCarritoConItems(carrito);
+                document.getElementById('vacio').classList.remove('hidden');
+                document.getElementById('conItems').classList.add('hidden');
+                return;
             }
-        }
-        
-        function mostrarCarritoVacio() {
-            document.getElementById('carritoVacio').classList.remove('hidden');
-            document.getElementById('carritoConItems').classList.add('hidden');
-        }
-        
-        function mostrarCarritoConItems(carrito) {
-            document.getElementById('carritoVacio').classList.add('hidden');
-            document.getElementById('carritoConItems').classList.remove('hidden');
             
-            const container = document.getElementById('listaItems');
+            document.getElementById('vacio').classList.add('hidden');
+            document.getElementById('conItems').classList.remove('hidden');
             
-            container.innerHTML = carrito.map((item, index) => `
+            // Renderizar items
+            document.getElementById('items').innerHTML = carrito.map((item, i) => `
                 <div class="bg-white rounded-xl shadow-sm p-4 flex gap-4">
-                    <img src="${item.imagen || 'https://via.placeholder.com/100'}" 
-                         alt="${item.nombre}" 
-                         class="w-24 h-24 object-cover rounded-lg"
-                         onerror="this.src='https://via.placeholder.com/100'">
-                    
+                    <img src="${item.imagen}" class="w-20 h-20 object-cover rounded-lg" onerror="this.src='https://via.placeholder.com/100'">
                     <div class="flex-1">
-                        <h3 class="font-serif text-lg text-sb-dark">${item.nombre}</h3>
-                        <p class="text-sb-green font-semibold">₡${item.precioUnitario.toLocaleString('es-CR')} c/u</p>
+                        <h3 class="font-semibold">${item.nombre}</h3>
+                        <p class="text-green-800 font-semibold">₡${item.precioUnitario.toLocaleString()} c/u</p>
                         
-                        <div class="flex items-center gap-4 mt-3">
-                            <!-- Cantidad -->
-                            <div class="flex items-center border rounded-lg">
-                                <button onclick="cambiarCantidad(${index}, -1)" class="px-3 py-1 hover:bg-gray-100">-</button>
+                        <div class="flex items-center gap-4 mt-2">
+                            <div class="flex items-center border rounded">
+                                <button onclick="cambiar(${i}, -1)" class="px-3 py-1 hover:bg-gray-100">-</button>
                                 <span class="px-3 py-1 font-medium">${item.cantidad}</span>
-                                <button onclick="cambiarCantidad(${index}, 1)" class="px-3 py-1 hover:bg-gray-100">+</button>
+                                <button onclick="cambiar(${i}, 1)" class="px-3 py-1 hover:bg-gray-100">+</button>
                             </div>
-                            
-                            <!-- Subtotal -->
-                            <span class="font-semibold text-lg">₡${item.subtotal.toLocaleString('es-CR')}</span>
-                            
-                            <!-- Eliminar -->
-                            <button onclick="eliminarItem(${index})" class="ml-auto text-red-500 hover:text-red-700 p-2">
+                            <span class="font-bold">₡${item.subtotal.toLocaleString()}</span>
+                            <button onclick="eliminar(${i})" class="ml-auto text-red-500 hover:text-red-700">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
@@ -150,13 +94,14 @@
                 </div>
             `).join('');
             
-            calcularTotales(carrito);
+            // Total
+            const total = carrito.reduce((sum, item) => sum + item.subtotal, 0);
+            document.getElementById('total').textContent = '₡' + total.toLocaleString();
         }
         
-        function cambiarCantidad(index, cambio) {
-            let carrito = JSON.parse(localStorage.getItem(CARRITO_KEY) || '[]');
-            
-            carrito[index].cantidad += cambio;
+        function cambiar(index, delta) {
+            let carrito = JSON.parse(localStorage.getItem(CARRITO_KEY));
+            carrito[index].cantidad += delta;
             
             if (carrito[index].cantidad <= 0) {
                 carrito.splice(index, 1);
@@ -165,35 +110,25 @@
             }
             
             localStorage.setItem(CARRITO_KEY, JSON.stringify(carrito));
-            cargarCarrito();
+            cargar();
         }
         
-        function eliminarItem(index) {
-            if (!confirm('¿Eliminar este producto del carrito?')) return;
-            
-            let carrito = JSON.parse(localStorage.getItem(CARRITO_KEY) || '[]');
+        function eliminar(index) {
+            if (!confirm('¿Eliminar?')) return;
+            let carrito = JSON.parse(localStorage.getItem(CARRITO_KEY));
             carrito.splice(index, 1);
-            
             localStorage.setItem(CARRITO_KEY, JSON.stringify(carrito));
-            cargarCarrito();
+            cargar();
         }
         
-        function vaciarCarrito() {
-            if (!confirm('¿Vaciar todo el carrito?')) return;
-            
+        function vaciar() {
+            if (!confirm('¿Vaciar todo?')) return;
             localStorage.removeItem(CARRITO_KEY);
-            cargarCarrito();
+            cargar();
         }
         
-        function calcularTotales(carrito) {
-            const subtotal = carrito.reduce((sum, item) => sum + item.subtotal, 0);
-            
-            document.getElementById('subtotal').textContent = '₡' + subtotal.toLocaleString('es-CR');
-            document.getElementById('total').textContent = '₡' + subtotal.toLocaleString('es-CR');
-        }
-        
-        // Inicializar
-        document.addEventListener('DOMContentLoaded', cargarCarrito);
+        // Cargar al iniciar
+        document.addEventListener('DOMContentLoaded', cargar);
     </script>
 </body>
 </html>
