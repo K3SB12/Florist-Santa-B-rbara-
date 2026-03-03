@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo | Floristería Santa Bárbara</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        sb: { green: '#2D5A3D', 'green-light': '#4A7C59', cream: '#F5F1E8', rose: '#C41E3A', 'rose-soft': '#E8B4B8', gold: '#D4AF37', dark: '#1A1A1A' }
+                    },
+                    fontFamily: { serif: ['Playfair Display', 'serif'], sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        .product-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .product-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
+        .skeleton { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: loading 1.5s infinite; }
+        @keyframes loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="font-sans bg-sb-cream text-sb-dark">
+    
+    <!-- Header (igual que index) -->
+    <header class="fixed w-full top-0 z-50 bg-white/95 backdrop-blur-md shadow-sm" id="header">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16 md:h-20">
+                <a href="index.html" class="flex items-center gap-3">
+                    <span class="text-3xl">🌸</span>
+                    <div>
+                        <h1 class="font-serif text-xl md:text-2xl font-bold text-sb-green">Santa Bárbara</h1>
+                        <p class="text-xs text-gray-500 hidden sm:block">Flores frescas • Costa Rica</p>
+                    </div>
+                </a>
+                
+                <nav class="hidden md:flex items-center gap-8">
+                    <a href="index.html" class="text-gray-600 hover:text-sb-green font-medium">Inicio</a>
+                    <a href="catalogo.html" class="text-sb-green font-medium">Catálogo</a>
+                    <a href="index.html#contacto" class="text-gray-600 hover:text-sb-green font-medium">Contacto</a>
+                </nav>
+                
+                <div class="flex items-center gap-4">
+                    <a href="carrito.html" class="relative p-2 text-gray-600 hover:text-sb-green">
+                        <i class="fas fa-shopping-bag text-xl"></i>
+                        <span id="cartCount" class="absolute -top-1 -right-1 bg-sb-rose text-white text-xs w-5 h-5 rounded-full flex items-center justify-center hidden">0</span>
+                    </a>
+                    <button onclick="toggleMenu()" class="md:hidden p-2"><i class="fas fa-bars text-xl"></i></button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="mobileMenu" class="hidden md:hidden bg-white border-t">
+            <div class="px-4 py-3 space-y-2">
+                <a href="index.html" class="block py-2 text-gray-600">Inicio</a>
+                <a href="catalogo.html" class="block py-2 text-sb-green font-medium">Catálogo</a>
+                <a href="carrito.html" class="block py-2 text-gray-600">Carrito</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="pt-24 pb-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <!-- Título y búsqueda -->
+            <div class="mb-8">
+                <h2 class="font-serif text-3xl md:text-4xl text-sb-dark mb-4">Nuestro Catálogo</h2>
+                <div class="flex flex-col md:flex-row gap-4">
+                    <div class="relative flex-1">
+                        <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                        <input type="text" id="busqueda" placeholder="Buscar rosas, arreglos, plantas..." 
+                               class="w-full pl-12 pr-4 py-3 rounded-xl border-2 border-gray-200 focus:border-sb-green focus:outline-none"
+                               oninput="filtrarProductos()">
+                    </div>
+                    <select id="ordenar" onchange="filtrarProductos()" class="px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-sb-green focus:outline-none bg-white">
+                        <option value="relevancia">Ordenar por relevancia</option>
+                        <option value="precio-menor">Precio: menor a mayor</option>
+                        <option value="precio-mayor">Precio: mayor a menor</option>
+                        <option value="nombre">Nombre A-Z</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Filtros de categoría -->
+            <div class="flex gap-3 overflow-x-auto pb-4 mb-8 scrollbar-hide" id="filtrosCategoria">
+                <button onclick="setCategoria('todos')" class="filtro-btn px-6 py-3 rounded-full bg-sb-green text-white font-medium whitespace-nowrap transition-all" data-cat="todos">
+                    Todos los productos
+                </button>
+                <!-- Más botones se cargan dinámicamente -->
+            </div>
+            
+            <!-- Contador de resultados -->
+            <p class="text-gray-600 mb-6" id="contadorResultados">Cargando productos...</p>
+            
+            <!-- Grid de productos -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="productosGrid">
+                <!-- Skeleton loading -->
+                <div class="skeleton rounded-2xl h-96"></div>
+                <div class="skeleton rounded-2xl h-96"></div>
+                <div class="skeleton rounded-2xl h-96"></div>
+                <div class="skeleton rounded-2xl h-96"></div>
+            </div>
+            
+            <!-- No resultados -->
+            <div id="sinResultados" class="hidden text-center py-16">
+                <i class="fas fa-search text-6xl text-gray-300 mb-4"></i>
+                <h3 class="font-serif text-2xl text-gray-600 mb-2">No encontramos productos</h3>
+                <p class="text-gray-500">Intenta con otra búsqueda o categoría</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer simplificado -->
+    <footer class="bg-sb-dark text-white py-8">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-gray-400">&copy; 2024 Floristería Santa Bárbara</p>
+        </div>
+    </footer>
+
+    <a href="https://wa.me/50686053613" target="_blank" class="fixed bottom-6 right-6 z-50 bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
+        <i class="fab fa-whatsapp text-2xl"></i>
+    </a>
+
+    <script>
+        let productos = [];
+        let categorias = [];
+        let categoriaActiva = 'todos';
+        
+        async function cargarDatos() {
+            try {
+                const response = await fetch('../data/products.json');
+                const data = await response.json();
+                productos = data.productos || [];
+                categorias = data.categorias || [];
+                
+                // Verificar si hay categoría en URL
+                const params = new URLSearchParams(window.location.search);
+                const catUrl = params.get('cat');
+                if (catUrl) categoriaActiva = catUrl;
+                
+                renderizarFiltros();
+                filtrarProductos();
+                actualizarContadorCarrito();
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('productosGrid').innerHTML = `
+                    <div class="col-span-full text-center py-12">
+                        <p>Error cargando catálogo. <a href="." class="text-sb-green underline">Recargar</a></p>
+                    </div>
+                `;
+            }
+        }
+        
+        function renderizarFiltros() {
+            const container = document.getElementById('filtrosCategoria');
+            const activas = categorias.filter(c => c.activa);
+            
+            const html = activas.map(cat => `
+                <button onclick="setCategoria('${cat.id}')" 
+                        class="filtro-btn px-6 py-3 rounded-full border-2 border-gray-200 text-gray-700 font-medium whitespace-nowrap transition-all hover:border-sb-green hover:text-sb-green" 
+                        data-cat="${cat.id}">
+                    ${cat.icono} ${cat.nombre}
+                </button>
+            `).join('');
+            
+            // Insertar después del botón "Todos"
+            container.insertAdjacentHTML('beforeend', html);
+            
+            // Marcar activo
+            actualizarBotonActivo();
+        }
+        
+        function setCategoria(cat) {
+            categoriaActiva = cat;
+            actualizarBotonActivo();
+            filtrarProductos();
+        }
+        
+        function actualizarBotonActivo() {
+            document.querySelectorAll('.filtro-btn').forEach(btn => {
+                const esActivo = btn.dataset.cat === categoriaActiva;
+                if (esActivo) {
+                    btn.className = 'filtro-btn px-6 py-3 rounded-full bg-sb-green text-white font-medium whitespace-nowrap transition-all';
+                } else {
+                    btn.className = 'filtro-btn px-6 py-3 rounded-full border-2 border-gray-200 text-gray-700 font-medium whitespace-nowrap transition-all hover:border-sb-green hover:text-sb-green';
+                }
+            });
+        }
+        
+        function filtrarProductos() {
+            const busqueda = document.getElementById('busqueda').value.toLowerCase();
+            const orden = document.getElementById('ordenar').value;
+            
+            let filtrados = productos.filter(p => {
+                const coincideCategoria = categoriaActiva === 'todos' || p.categoria === categoriaActiva;
+                const coincideBusqueda = !busqueda || 
+                    p.nombre.toLowerCase().includes(busqueda) || 
+                    p.descripcion?.toLowerCase().includes(busqueda) ||
+                    p.categoria.toLowerCase().includes(busqueda);
+                return p.activo && coincideCategoria && coincideBusqueda;
+            });
+            
+            // Ordenar
+            switch(orden) {
+                case 'precio-menor':
+                    filtrados.sort((a, b) => getPrecio(a) - getPrecio(b));
+                    break;
+                case 'precio-mayor':
+                    filtrados.sort((a, b) => getPrecio(b) - getPrecio(a));
+                    break;
+                case 'nombre':
+                    filtrados.sort((a, b) => a.nombre.localeCompare(b.nombre));
+                    break;
+            }
+            
+            renderizarProductos(filtrados);
+        }
+        
+        function getPrecio(producto) {
+            return producto.precioTemporadaActivo && producto.precioTemporada 
+                ? producto.precioTemporada 
+                : producto.precioRegular;
+        }
+        
+        function renderizarProductos(lista) {
+            const container = document.getElementById('productosGrid');
+            const contador = document.getElementById('contadorResultados');
+            const sinResultados = document.getElementById('sinResultados');
+            
+            contador.textContent = `${lista.length} producto${lista.length !== 1 ? 's' : ''} encontrado${lista.length !== 1 ? 's' : ''}`;
+            
+            if (lista.length === 0) {
+                container.innerHTML = '';
+                sinResultados.classList.remove('hidden');
+                return;
+            }
+            
+            sinResultados.classList.add('hidden');
+            
+            container.innerHTML = lista.map(p => {
+                const precio = getPrecio(p);
+                const imagen = p.imagenes?.[0] || 'https://via.placeholder.com/400x400?text=Sin+Imagen';
+                
+                return `
+                    <div class="product-card bg-white rounded-2xl overflow-hidden shadow-md">
+                        <div class="relative aspect-square overflow-hidden bg-gray-100">
+                            <img src="${imagen}" alt="${p.nombre}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" loading="lazy">
+                            
+                            ${p.precioTemporadaActivo ? `<span class="absolute top-3 left-3 bg-sb-rose text-white px-3 py-1 rounded-full text-xs font-bold">OFERTA</span>` : ''}
+                            
+                            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4 opacity-0 hover:opacity-100 transition-opacity">
+                                <a href="producto.html?id=${p.id}" class="block w-full bg-white text-sb-dark text-center py-2 rounded-lg font-medium">Ver detalle</a>
+                            </div>
+                        </div>
+                        
+                        <div class="p-4">
+                            <span class="text-xs text-gray-500 uppercase tracking-wider">${p.categoria}</span>
+                            <h4 class="font-serif text-lg text-sb-dark mt-1 mb-2 line-clamp-2">${p.nombre}</h4>
+                            <p class="text-gray-600 text-sm mb-3 line-clamp-2">${p.descripcion || ''}</p>
+                            
+                            <div class="flex items-baseline gap-2 mb-4">
+                                <span class="text-2xl font-bold text-sb-green">₡${precio.toLocaleString()}</span>
+                                ${p.precioTemporadaActivo && p.precioRegular ? `<span class="text-sm text-gray-400 line-through">₡${p.precioRegular.toLocaleString()}</span>` : ''}
+                            </div>
+                            
+                            <button onclick="agregarAlCarrito(${p.id})" class="w-full bg-sb-green hover:bg-sb-green-light text-white py-3 rounded-xl font-medium transition-colors flex items-center justify-center gap-2">
+                                <i class="fas fa-shopping-bag"></i> Agregar
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function agregarAlCarrito(productoId) {
+            const producto = productos.find(p => p.id === productoId);
+            if (!producto) return;
+            
+            let carrito = JSON.parse(sessionStorage.getItem('carrito') || '[]');
+            const existente = carrito.find(item => item.id === productoId);
+            
+            if (existente) {
+                existente.cantidad++;
+            } else {
+                carrito.push({
+                    id: producto.id,
+                    nombre: producto.nombre,
+                    precio: getPrecio(producto),
+                    imagen: producto.imagenes?.[0],
+                    cantidad: 1
+                });
+            }
+            
+            sessionStorage.setItem('carrito', JSON.stringify(carrito));
+            actualizarContadorCarrito();
+            
+            // Feedback visual
+            const btn = event.target;
+            btn.innerHTML = '<i class="fas fa-check"></i> ¡Agregado!';
+            btn.classList.add('bg-green-600');
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fas fa-shopping-bag"></i> Agregar';
+                btn.classList.remove('bg-green-600');
+            }, 1500);
+        }
+        
+        function actualizarContadorCarrito() {
+            const carrito = JSON.parse(sessionStorage.getItem('carrito') || '[]');
+            const total = carrito.reduce((sum, item) => sum + item.cantidad, 0);
+            const badge = document.getElementById('cartCount');
+            
+            if (total > 0) {
+                badge.textContent = total;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+        
+        function toggleMenu() {
+            document.getElementById('mobileMenu').classList.toggle('hidden');
+        }
+        
+        document.addEventListener('DOMContentLoaded', cargarDatos);
+    </script>
+</body>
+</html>
