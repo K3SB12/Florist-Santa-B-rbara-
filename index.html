@@ -3,1422 +3,580 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Floristería Santa Bárbara</title>
+    <title>Floristería Santa Bárbara | Costa Rica</title>
+    <meta name="description" content="Flores frescas en Costa Rica. Envío express San José. Rosas, arreglos florales, plantas.">
+    
+    <!-- Tailwind CSS (CDN gratuito) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome (CDN gratuito) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary: #2e7d32;
-            --primary-light: #4caf50;
-            --accent: #e91e63;
-            --dark: #1a1a2e;
-            --sidebar: #162447;
-            --bg: #f5f7fa;
-        }
-        
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        
-        body {
-            background: var(--bg);
-            min-height: 100vh;
-        }
-        
-        /* SIDEBAR */
-        .sidebar {
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: 260px;
-            height: 100vh;
-            background: var(--sidebar);
-            color: white;
-            z-index: 1000;
-            transition: transform 0.3s;
-        }
-        
-        .sidebar-header {
-            padding: 1.5rem;
-            background: var(--dark);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-        
-        .sidebar-header h2 {
-            font-size: 1.25rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .sidebar-menu {
-            padding: 1rem 0;
-        }
-        
-        .menu-item {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 1rem 1.5rem;
-            color: #b0b0b0;
-            cursor: pointer;
-            transition: all 0.3s;
-            border-left: 3px solid transparent;
-        }
-        
-        .menu-item:hover, .menu-item.active {
-            background: rgba(255,255,255,0.05);
-            color: white;
-            border-left-color: var(--accent);
-        }
-        
-        .menu-item i {
-            width: 20px;
-            text-align: center;
-        }
-        
-        /* MAIN CONTENT */
-        .main {
-            margin-left: 260px;
-            padding: 2rem;
-            min-height: 100vh;
-        }
-        
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-        
-        .header h1 {
-            color: var(--dark);
-            font-size: 1.75rem;
-        }
-        
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 0.3s;
-        }
-        
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            background: #1b5e20;
-        }
-        
-        .btn-danger {
-            background: #dc3545;
-            color: white;
-        }
-        
-        .btn-warning {
-            background: #ffc107;
-            color: #333;
-        }
-        
-        .btn-sm {
-            padding: 0.5rem 1rem;
-            font-size: 0.875rem;
-        }
-        
-        /* CARDS */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        
-        .stat-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-        }
-        
-        .stat-card i {
-            font-size: 2rem;
-            color: var(--primary);
-            margin-bottom: 0.5rem;
-        }
-        
-        .stat-card h3 {
-            font-size: 2rem;
-            color: var(--dark);
-        }
-        
-        .stat-card p {
-            color: #666;
-            font-size: 0.875rem;
-        }
-        
-        /* CONTENT BOX */
-        .content-box {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-            margin-bottom: 1.5rem;
-        }
-        
-        .content-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid #eee;
-        }
-        
-        /* TABLAS */
-        .table-responsive {
-            overflow-x: auto;
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        th, td {
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid #eee;
-        }
-        
-        th {
-            font-weight: 600;
-            color: #666;
-            font-size: 0.875rem;
-            text-transform: uppercase;
-        }
-        
-        tr:hover {
-            background: #f8f9fa;
-        }
-        
-        .badge {
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-        
-        .badge-success {
-            background: #d4edda;
-            color: #155724;
-        }
-        
-        .badge-warning {
-            background: #fff3cd;
-            color: #856404;
-        }
-        
-        .badge-danger {
-            background: #f8d7da;
-            color: #721c24;
-        }
-        
-        /* FORMULARIOS */
-        .form-group {
-            margin-bottom: 1.25rem;
-        }
-        
-        .form-label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: #333;
-        }
-        
-        .form-control {
-            width: 100%;
-            padding: 0.75rem;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: all 0.3s;
-        }
-        
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-        
-        textarea.form-control {
-            min-height: 100px;
-            resize: vertical;
-        }
-        
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-        
-        @media (max-width: 768px) {
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        /* SWITCH TOGGLE */
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 24px;
-        }
-        
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 24px;
-        }
-        
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 16px;
-            width: 16px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-        
-        input:checked + .slider {
-            background-color: var(--primary);
-        }
-        
-        input:checked + .slider:before {
-            transform: translateX(26px);
-        }
-        
-        /* TABS */
-        .tabs {
-            display: flex;
-            gap: 1rem;
-            border-bottom: 2px solid #eee;
-            margin-bottom: 1.5rem;
-        }
-        
-        .tab {
-            padding: 0.75rem 1.5rem;
-            cursor: pointer;
-            border-bottom: 2px solid transparent;
-            margin-bottom: -2px;
-            font-weight: 600;
-            color: #666;
-        }
-        
-        .tab.active {
-            color: var(--primary);
-            border-bottom-color: var(--primary);
-        }
-        
-        .tab-content {
-            display: none;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
-        /* SUBIDA DE IMÁGENES */
-        .upload-zone {
-            border: 3px dashed #ddd;
-            border-radius: 12px;
-            padding: 3rem 2rem;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .upload-zone:hover {
-            border-color: var(--primary);
-            background: var(--primary-pale);
-        }
-        
-        .upload-zone i {
-            font-size: 3rem;
-            color: #999;
-            margin-bottom: 1rem;
-        }
-        
-        .preview-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-        
-        .preview-item {
-            position: relative;
-            border-radius: 8px;
-            overflow: hidden;
-            aspect-ratio: 1;
-        }
-        
-        .preview-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .preview-item .remove {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            background: #dc3545;
-            color: white;
-            border: none;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        /* MODAL */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-        }
-        
-        .modal.active {
-            display: flex;
-        }
-        
-        .modal-content {
-            background: white;
-            border-radius: 16px;
-            width: 100%;
-            max-width: 700px;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        
-        .modal-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .modal-body {
-            padding: 1.5rem;
-        }
-        
-        .modal-footer {
-            padding: 1.5rem;
-            border-top: 1px solid #eee;
-            display: flex;
-            justify-content: flex-end;
-            gap: 1rem;
-        }
-        
-        .close-btn {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: #666;
-        }
-        
-        /* PRECIOS DUALES */
-        .price-inputs {
-            display: grid;
-            grid-template-columns: 1fr 1fr auto;
-            gap: 1rem;
-            align-items: end;
-        }
-        
-        .price-type {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.75rem;
-            background: #f8f9fa;
-            border-radius: 8px;
-        }
-        
-        /* MENÚ MÓVIL */
-        .menu-toggle-mobile {
-            display: none;
-            position: fixed;
-            top: 1rem;
-            left: 1rem;
-            z-index: 1001;
-            background: var(--sidebar);
-            color: white;
-            border: none;
-            padding: 0.75rem;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-        
-        @media (max-width: 768px) {
-            .menu-toggle-mobile {
-                display: block;
-            }
-            
-            .sidebar {
-                transform: translateX(-100%);
-            }
-            
-            .sidebar.active {
-                transform: translateX(0);
-            }
-            
-            .main {
-                margin-left: 0;
-                padding-top: 4rem;
-            }
-        }
-        
-        .hidden { display: none !important; }
-    </style>
-</head>
-<body>
-    <button class="menu-toggle-mobile" onclick="toggleSidebar()">
-        <i class="fas fa-bars"></i>
-    </button>
     
-    <!-- Sidebar -->
-    <nav class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <h2>🌺 Santa Bárbara</h2>
-            <p style="font-size: 0.875rem; opacity: 0.7;">Panel Administrativo</p>
-        </div>
-        
-        <div class="sidebar-menu">
-            <div class="menu-item active" onclick="showSection('dashboard')">
-                <i class="fas fa-home"></i> Dashboard
-            </div>
-            <div class="menu-item" onclick="showSection('productos')">
-                <i class="fas fa-box"></i> Productos
-            </div>
-            <div class="menu-item" onclick="showSection('categorias')">
-                <i class="fas fa-tags"></i> Categorías
-            </div>
-            <div class="menu-item" onclick="showSection('fotos')">
-                <i class="fas fa-images"></i> Galería de Fotos
-            </div>
-            <div class="menu-item" onclick="showSection('config')">
-                <i class="fas fa-cog"></i> Configuración
-            </div>
-            <div class="menu-item" onclick="window.open('index.html', '_blank')">
-                <i class="fas fa-external-link-alt"></i> Ver Tienda
-            </div>
-        </div>
-    </nav>
-    
-    <!-- Main Content -->
-    <main class="main">
-        <!-- DASHBOARD -->
-        <section id="dashboard" class="section-content">
-            <div class="header">
-                <h1>Dashboard</h1>
-                <button class="btn btn-primary" onclick="exportarDatos()">
-                    <i class="fas fa-download"></i> Exportar Backup
-                </button>
-            </div>
-            
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <i class="fas fa-box"></i>
-                    <h3 id="statProductos">0</h3>
-                    <p>Productos Activos</p>
-                </div>
-                <div class="stat-card">
-                    <i class="fas fa-tags"></i>
-                    <h3 id="statCategorias">0</h3>
-                    <p>Categorías</p>
-                </div>
-                <div class="stat-card">
-                    <i class="fas fa-image"></i>
-                    <h3 id="statFotos">0</h3>
-                    <p>Fotos Subidas</p>
-                </div>
-                <div class="stat-card">
-                    <i class="fas fa-shopping-cart"></i>
-                    <h3 id="statPedidos">0</h3>
-                    <p>Pedidos Hoy</p>
-                </div>
-            </div>
-            
-            <div class="content-box">
-                <h3 style="margin-bottom: 1rem;">Importar Datos</h3>
-                <p style="color: #666; margin-bottom: 1rem;">
-                    Si tienes un backup anterior o quieres transferir datos de otro dispositivo, selecciona el archivo aquí:
-                </p>
-                <input type="file" id="importFile" accept=".json" onchange="importarDatos(this)">
-            </div>
-        </section>
-        
-        <!-- PRODUCTOS -->
-        <section id="productos" class="section-content hidden">
-            <div class="header">
-                <h1>Gestión de Productos</h1>
-                <button class="btn btn-primary" onclick="abrirModalProducto()">
-                    <i class="fas fa-plus"></i> Nuevo Producto
-                </button>
-            </div>
-            
-            <div class="content-box">
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Código</th>
-                                <th>Imagen</th>
-                                <th>Nombre</th>
-                                <th>Categoría</th>
-                                <th>Precio</th>
-                                <th>Estado</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tablaProductos"></tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-        
-        <!-- CATEGORÍAS -->
-        <section id="categorias" class="section-content hidden">
-            <div class="header">
-                <h1>Categorías</h1>
-                <button class="btn btn-primary" onclick="abrirModalCategoria()">
-                    <i class="fas fa-plus"></i> Nueva Categoría
-                </button>
-            </div>
-            
-            <div class="content-box">
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Orden</th>
-                                <th>Icono</th>
-                                <th>Nombre</th>
-                                <th>Productos</th>
-                                <th>Estado</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tablaCategorias"></tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-        
-        <!-- FOTOS -->
-        <section id="fotos" class="section-content hidden">
-            <div class="header">
-                <h1>Galería de Fotos</h1>
-            </div>
-            
-            <div class="content-box">
-                <div class="tabs">
-                    <div class="tab active" onclick="showTab('subir')">Subir Nuevas</div>
-                    <div class="tab" onclick="showTab('galeria')">Ver Galería</div>
-                </div>
-                
-                <!-- Subir -->
-                <div id="tab-subir" class="tab-content active">
-                    <div class="upload-zone" onclick="document.getElementById('inputFotos').click()">
-                        <i class="fas fa-cloud-upload-alt"></i>
-                        <h3>Arrastra fotos aquí o haz clic</h3>
-                        <p>JPG, PNG. Máximo 5MB por foto</p>
-                        <input type="file" id="inputFotos" multiple accept="image/*" class="hidden" onchange="previsualizarFotos(this)">
-                    </div>
-                    
-                    <div class="form-group" style="margin-top: 1rem;">
-                        <label class="form-label">Categoría de las fotos</label>
-                        <select id="categoriaFoto" class="form-control">
-                            <option value="productos">Productos</option>
-                            <option value="local">Local/Tienda</option>
-                            <option value="eventos">Eventos</option>
-                            <option value="trabajos">Trabajos Realizados</option>
-                        </select>
-                    </div>
-                    
-                    <div class="preview-grid" id="previewFotos"></div>
-                    
-                    <button class="btn btn-primary" onclick="subirFotos()" id="btnSubir" disabled>
-                        <i class="fas fa-upload"></i> Subir Fotos
-                    </button>
-                </div>
-                
-                <!-- Galería -->
-                <div id="tab-galeria" class="tab-content">
-                    <div class="preview-grid" id="galeriaCompleta"></div>
-                </div>
-            </div>
-        </section>
-        
-        <!-- CONFIGURACIÓN -->
-        <section id="config" class="section-content hidden">
-            <div class="header">
-                <h1>Configuración</h1>
-            </div>
-            
-            <div class="content-box">
-                <div class="form-group">
-                    <label class="form-label">Nombre del Negocio</label>
-                    <input type="text" id="configNombre" class="form-control">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">WhatsApp (número sin espacios)</label>
-                    <input type="text" id="configWhatsapp" class="form-control" placeholder="50686053613">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Tarifa de Express (por km)</label>
-                    <input type="number" id="configTarifa" class="form-control" value="650">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Horario de Atención</label>
-                    <input type="text" id="configHorario" class="form-control">
-                </div>
-                
-                <button class="btn btn-primary" onclick="guardarConfig()">
-                    <i class="fas fa-save"></i> Guardar Cambios
-                </button>
-            </div>
-        </section>
-    </main>
-    
-    <!-- MODAL PRODUCTO -->
-    <div class="modal" id="modalProducto">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="tituloModalProducto">Nuevo Producto</h2>
-                <button class="close-btn" onclick="cerrarModal('modalProducto')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" id="prodId">
-                
-                <div class="form-group">
-                    <label class="form-label">Código Único *</label>
-                    <input type="text" id="prodCodigo" class="form-control" placeholder="SB-ROS-001">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Nombre del Producto *</label>
-                    <input type="text" id="prodNombre" class="form-control" placeholder="Ramo de 12 Rosas">
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Categoría *</label>
-                        <select id="prodCategoria" class="form-control"></select>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Stock</label>
-                        <input type="number" id="prodStock" class="form-control" value="10">
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Descripción</label>
-                    <textarea id="prodDescripcion" class="form-control"></textarea>
-                </div>
-                
-                <!-- PRECIOS DUALES -->
-                <div class="form-group">
-                    <label class="form-label">Precios</label>
-                    <div class="price-inputs">
-                        <div>
-                            <label style="font-size: 0.875rem; color: #666;">Precio Regular</label>
-                            <input type="number" id="prodPrecioRegular" class="form-control" placeholder="25000">
-                        </div>
-                        <div>
-                            <label style="font-size: 0.875rem; color: #666;">Precio Temporada (opcional)</label>
-                            <input type="number" id="prodPrecioTemporada" class="form-control" placeholder="20000">
-                        </div>
-                        <div class="price-type">
-                            <label class="switch">
-                                <input type="checkbox" id="prodUsarTemporada">
-                                <span class="slider"></span>
-                            </label>
-                            <span>Activar temporada</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- IMÁGENES -->
-                <div class="form-group">
-                    <label class="form-label">Fotos del Producto</label>
-                    <div class="upload-zone" onclick="document.getElementById('prodInputFotos').click()" style="padding: 1.5rem;">
-                        <i class="fas fa-camera"></i>
-                        <p>Click para agregar fotos</p>
-                        <input type="file" id="prodInputFotos" multiple accept="image/*" class="hidden" onchange="prodPrevisualizarFotos(this)">
-                    </div>
-                    <div class="preview-grid" id="prodPreviewFotos"></div>
-                </div>
-                
-                <div class="form-group">
-                    <label style="display: flex; align-items: center; gap: 0.5rem;">
-                        <input type="checkbox" id="prodEstado" checked>
-                        Producto activo (visible en tienda)
-                    </label>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn" onclick="cerrarModal('modalProducto')" style="background: #eee;">Cancelar</button>
-                <button class="btn btn-primary" onclick="guardarProducto()">Guardar Producto</button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- MODAL CATEGORÍA -->
-    <div class="modal" id="modalCategoria">
-        <div class="modal-content" style="max-width: 500px;">
-            <div class="modal-header">
-                <h2 id="tituloModalCategoria">Nueva Categoría</h2>
-                <button class="close-btn" onclick="cerrarModal('modalCategoria')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" id="catId">
-                
-                <div class="form-group">
-                    <label class="form-label">Nombre *</label>
-                    <input type="text" id="catNombre" class="form-control">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Icono (emoji)</label>
-                    <input type="text" id="catIcono" class="form-control" placeholder="🌹" maxlength="2">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Orden de aparición</label>
-                    <input type="number" id="catOrden" class="form-control" value="1">
-                </div>
-                
-                <div class="form-group">
-                    <label style="display: flex; align-items: center; gap: 0.5rem;">
-                        <input type="checkbox" id="catEstado" checked>
-                        Categoría activa
-                    </label>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn" onclick="cerrarModal('modalCategoria')" style="background: #eee;">Cancelar</button>
-                <button class="btn btn-primary" onclick="guardarCategoria()">Guardar</button>
-            </div>
-        </div>
-    </div>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     
     <script>
-        // ==========================================
-        // VARIABLES GLOBALES
-        // ==========================================
-        
-        let sistema = {
-            categorias: [],
-            productos: [],
-            config: {}
-        };
-        
-        let fotosTemp = []; // Fotos pendientes de subir
-        let prodFotosTemp = []; // Fotos de producto en edición
-        
-        // ==========================================
-        // INICIALIZACIÓN
-        // ==========================================
-        
-        document.addEventListener('DOMContentLoaded', () => {
-            cargarDatos();
-        });
-        
-        function cargarDatos() {
-            const guardado = localStorage.getItem('floristeria_sistema');
-            
-            if (guardado) {
-                sistema = JSON.parse(guardado);
-            } else {
-                // Datos de ejemplo
-                sistema = {
-                    categorias: [
-                        { id: 'rosas', nombre: 'Rosas', icono: '🌹', orden: 1, estado: true },
-                        { id: 'arreglos', nombre: 'Arreglos Florales', icono: '💐', orden: 2, estado: true },
-                        { id: 'plantas', nombre: 'Plantas', icono: '🪴', orden: 3, estado: true }
-                    ],
-                    productos: [],
-                    config: {
-                        nombreNegocio: 'Floristería Santa Bárbara',
-                        whatsapp: '50686053613',
-                        tarifaExpress: 650,
-                        horario: 'Lun-Sáb: 7am-7pm, Dom: 8am-2pm'
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        sb: {
+                            green: '#2D5A3D',
+                            'green-light': '#4A7C59',
+                            cream: '#F5F1E8',
+                            rose: '#C41E3A',
+                            'rose-soft': '#E8B4B8',
+                            gold: '#D4AF37',
+                            dark: '#1A1A1A'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'serif'],
+                        sans: ['Inter', 'sans-serif']
                     }
-                };
-                guardarDatos();
-            }
-            
-            actualizarDashboard();
-            renderizarProductos();
-            renderizarCategorias();
-            renderizarGaleria();
-            cargarConfig();
-        }
-        
-        function guardarDatos() {
-            localStorage.setItem('floristeria_sistema', JSON.stringify(sistema));
-            // Notificar a otras pestañas
-            window.dispatchEvent(new StorageEvent('storage', { key: 'floristeria_sistema' }));
-        }
-        
-        // ==========================================
-        // NAVEGACIÓN
-        // ==========================================
-        
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('active');
-        }
-        
-        function showSection(id) {
-            // Ocultar todas
-            document.querySelectorAll('.section-content').forEach(s => s.classList.add('hidden'));
-            document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
-            
-            // Mostrar seleccionada
-            document.getElementById(id).classList.remove('hidden');
-            event.target.classList.add('active');
-            
-            // Cerrar sidebar en móvil
-            document.getElementById('sidebar').classList.remove('active');
-        }
-        
-        function showTab(id) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            
-            event.target.classList.add('active');
-            document.getElementById('tab-' + id).classList.add('active');
-        }
-        
-        // ==========================================
-        // DASHBOARD
-        // ==========================================
-        
-        function actualizarDashboard() {
-            document.getElementById('statProductos').textContent = sistema.productos.filter(p => p.estado).length;
-            document.getElementById('statCategorias').textContent = sistema.categorias.filter(c => c.estado).length;
-            
-            const totalFotos = sistema.productos.reduce((acc, p) => acc + (p.imagenes ? p.imagenes.length : 0), 0);
-            document.getElementById('statFotos').textContent = totalFotos;
-            
-            // Pedidos de hoy (simulado)
-            const hoy = new Date().toDateString();
-            const pedidosHoy = JSON.parse(localStorage.getItem('pedidos_historial') || '[]')
-                .filter(p => new Date(p.fechaPedido).toDateString() === hoy).length;
-            document.getElementById('statPedidos').textContent = pedidosHoy;
-        }
-        
-        // ==========================================
-        // PRODUCTOS - CRUD COMPLETO
-        // ==========================================
-        
-        function renderizarProductos() {
-            const tbody = document.getElementById('tablaProductos');
-            tbody.innerHTML = sistema.productos.map(p => {
-                const categoria = sistema.categorias.find(c => c.id === p.categoria);
-                const precioMostrar = p.precios.activo === 'temporada' && p.precios.temporada && p.temporada.activa
-                    ? p.precios.temporada : p.precios.regular;
-                
-                const img = p.imagenes && p.imagenes.length > 0 
-                    ? `<img src="${p.imagenes[0]}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px;">`
-                    : '<i class="fas fa-image" style="color: #ccc; font-size: 2rem;"></i>';
-                
-                return `
-                    <tr>
-                        <td><strong>${p.codigo}</strong></td>
-                        <td>${img}</td>
-                        <td>${p.nombre}</td>
-                        <td>${categoria ? categoria.nombre : '-'}</td>
-                        <td>₡${precioMostrar.toLocaleString()}</td>
-                        <td>
-                            <span class="badge ${p.estado ? 'badge-success' : 'badge-danger'}">
-                                ${p.estado ? 'Activo' : 'Inactivo'}
-                            </span>
-                        </td>
-                        <td>
-                            <button class="btn btn-sm btn-warning" onclick="editarProducto(${p.id})">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn btn-sm btn-danger" onclick="eliminarProducto(${p.id})">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-            
-            // Actualizar select de categorías
-            const select = document.getElementById('prodCategoria');
-            select.innerHTML = sistema.categorias
-                .filter(c => c.estado)
-                .map(c => `<option value="${c.id}">${c.icono} ${c.nombre}</option>`)
-                .join('');
-        }
-        
-        function abrirModalProducto(id = null) {
-            document.getElementById('modalProducto').classList.add('active');
-            document.getElementById('tituloModalProducto').textContent = id ? 'Editar Producto' : 'Nuevo Producto';
-            
-            if (id) {
-                const p = sistema.productos.find(x => x.id === id);
-                document.getElementById('prodId').value = p.id;
-                document.getElementById('prodCodigo').value = p.codigo;
-                document.getElementById('prodNombre').value = p.nombre;
-                document.getElementById('prodCategoria').value = p.categoria;
-                document.getElementById('prodDescripcion').value = p.descripcion || '';
-                document.getElementById('prodStock').value = p.stock || 0;
-                document.getElementById('prodPrecioRegular').value = p.precios.regular;
-                document.getElementById('prodPrecioTemporada').value = p.precios.temporada || '';
-                document.getElementById('prodUsarTemporada').checked = p.precios.activo === 'temporada';
-                document.getElementById('prodEstado').checked = p.estado;
-                
-                // Cargar fotos existentes
-                prodFotosTemp = p.imagenes || [];
-                renderizarPreviewProd();
-            } else {
-                // Limpiar formulario
-                document.getElementById('prodId').value = '';
-                document.getElementById('prodCodigo').value = '';
-                document.getElementById('prodNombre').value = '';
-                document.getElementById('prodDescripcion').value = '';
-                document.getElementById('prodStock').value = '10';
-                document.getElementById('prodPrecioRegular').value = '';
-                document.getElementById('prodPrecioTemporada').value = '';
-                document.getElementById('prodUsarTemporada').checked = false;
-                document.getElementById('prodEstado').checked = true;
-                prodFotosTemp = [];
-                renderizarPreviewProd();
-            }
-        }
-        
-        function prodPrevisualizarFotos(input) {
-            const files = Array.from(input.files);
-            
-            files.forEach(file => {
-                if (file.size > 5 * 1024 * 1024) {
-                    alert('La foto ' + file.name + ' es muy grande. Máximo 5MB.');
-                    return;
                 }
-                
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    // Comprimir imagen antes de guardar
-                    comprimirImagen(e.target.result, 1200, 0.8).then(comprimida => {
-                        prodFotosTemp.push(comprimida);
-                        renderizarPreviewProd();
-                    });
-                };
-                reader.readAsDataURL(file);
-            });
+            }
+        }
+    </script>
+    
+    <style>
+        /* Animaciones personalizadas */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
         
-        function renderizarPreviewProd() {
-            const container = document.getElementById('prodPreviewFotos');
-            container.innerHTML = prodFotosTemp.map((img, i) => `
-                <div class="preview-item">
-                    <img src="${img}">
-                    <button class="remove" onclick="prodFotosTemp.splice(${i}, 1); renderizarPreviewProd()">
-                        <i class="fas fa-times"></i>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-float { animation: float 3s ease-in-out infinite; }
+        .animate-fade-in { animation: fadeIn 0.6s ease-out; }
+        
+        /* Scroll suave */
+        html { scroll-behavior: smooth; }
+        
+        /* Ocultar scrollbar pero mantener funcionalidad */
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Efecto hover en tarjetas */
+        .product-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        
+        /* Loader */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+        
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
+</head>
+<body class="font-sans bg-sb-cream text-sb-dark">
+    
+    <!-- Header -->
+    <header class="fixed w-full top-0 z-50 bg-white/95 backdrop-blur-md shadow-sm transition-all" id="header">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16 md:h-20">
+                <!-- Logo -->
+                <a href="index.html" class="flex items-center gap-3 group">
+                    <span class="text-3xl animate-float">🌸</span>
+                    <div>
+                        <h1 class="font-serif text-xl md:text-2xl font-bold text-sb-green group-hover:text-sb-green-light transition-colors">
+                            Santa Bárbara
+                        </h1>
+                        <p class="text-xs text-gray-500 hidden sm:block">Flores frescas • Costa Rica</p>
+                    </div>
+                </a>
+                
+                <!-- Navegación Desktop -->
+                <nav class="hidden md:flex items-center gap-8">
+                    <a href="index.html" class="text-gray-600 hover:text-sb-green font-medium transition-colors">Inicio</a>
+                    <a href="catalogo.html" class="text-gray-600 hover:text-sb-green font-medium transition-colors">Catálogo</a>
+                    <a href="#contacto" class="text-gray-600 hover:text-sb-green font-medium transition-colors">Contacto</a>
+                </nav>
+                
+                <!-- Acciones -->
+                <div class="flex items-center gap-4">
+                    <!-- Carrito -->
+                    <a href="carrito.html" class="relative p-2 text-gray-600 hover:text-sb-green transition-colors">
+                        <i class="fas fa-shopping-bag text-xl"></i>
+                        <span id="cartCount" class="absolute -top-1 -right-1 bg-sb-rose text-white text-xs w-5 h-5 rounded-full flex items-center justify-center hidden">0</span>
+                    </a>
+                    
+                    <!-- WhatsApp -->
+                    <a href="https://wa.me/50686053613" target="_blank" class="hidden sm:flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-full transition-all">
+                        <i class="fab fa-whatsapp"></i>
+                        <span class="text-sm font-medium">Pedir</span>
+                    </a>
+                    
+                    <!-- Menú móvil -->
+                    <button onclick="toggleMenu()" class="md:hidden p-2 text-gray-600 hover:text-sb-green">
+                        <i class="fas fa-bars text-xl"></i>
                     </button>
                 </div>
-            `).join('');
-        }
+            </div>
+        </div>
         
-        function guardarProducto() {
-            const id = document.getElementById('prodId').value;
-            const codigo = document.getElementById('prodCodigo').value.trim();
-            const nombre = document.getElementById('prodNombre').value.trim();
-            
-            if (!codigo || !nombre) {
-                alert('Código y nombre son obligatorios');
-                return;
-            }
-            
-            const producto = {
-                id: id ? parseInt(id) : Date.now(),
-                codigo,
-                nombre,
-                categoria: document.getElementById('prodCategoria').value,
-                descripcion: document.getElementById('prodDescripcion').value,
-                stock: parseInt(document.getElementById('prodStock').value) || 0,
-                precios: {
-                    regular: parseInt(document.getElementById('prodPrecioRegular').value) || 0,
-                    temporada: parseInt(document.getElementById('prodPrecioTemporada').value) || null,
-                    activo: document.getElementById('prodUsarTemporada').checked ? 'temporada' : 'regular'
-                },
-                temporada: {
-                    activa: document.getElementById('prodUsarTemporada').checked,
-                    fechaInicio: new Date().toISOString().split('T')[0],
-                    fechaFin: ''
-                },
-                imagenes: prodFotosTemp,
-                estado: document.getElementById('prodEstado').checked,
-                fechaEdicion: new Date().toISOString()
-            };
-            
-            if (id) {
-                const index = sistema.productos.findIndex(p => p.id == id);
-                sistema.productos[index] = producto;
-            } else {
-                sistema.productos.push(producto);
-            }
-            
-            guardarDatos();
-            renderizarProductos();
-            cerrarModal('modalProducto');
-            actualizarDashboard();
-        }
+        <!-- Menú móvil desplegable -->
+        <div id="mobileMenu" class="hidden md:hidden bg-white border-t">
+            <div class="px-4 py-3 space-y-2">
+                <a href="index.html" class="block py-2 text-gray-600 hover:text-sb-green">Inicio</a>
+                <a href="catalogo.html" class="block py-2 text-gray-600 hover:text-sb-green">Catálogo</a>
+                <a href="carrito.html" class="block py-2 text-gray-600 hover:text-sb-green">Carrito</a>
+                <a href="https://wa.me/50686053613" class="block py-2 text-green-600 font-medium">
+                    <i class="fab fa-whatsapp mr-2"></i>WhatsApp
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+        <!-- Imagen de fondo -->
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1561181286-d3fee7d55364?w=1920" 
+                 alt="Flores de fondo" 
+                 class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-r from-sb-dark/80 via-sb-dark/50 to-transparent"></div>
+        </div>
         
-        function editarProducto(id) {
-            abrirModalProducto(id);
-        }
-        
-        function eliminarProducto(id) {
-            if (!confirm('¿Eliminar este producto permanentemente?')) return;
-            
-            sistema.productos = sistema.productos.filter(p => p.id !== id);
-            guardarDatos();
-            renderizarProductos();
-            actualizarDashboard();
-        }
-        
-        // ==========================================
-        // CATEGORÍAS - CRUD
-        // ==========================================
-        
-        function renderizarCategorias() {
-            const tbody = document.getElementById('tablaCategorias');
-            tbody.innerHTML = sistema.categorias.map(c => {
-                const productosCount = sistema.productos.filter(p => p.categoria === c.id).length;
-                return `
-                    <tr>
-                        <td>${c.orden}</td>
-                        <td style="font-size: 1.5rem;">${c.icono}</td>
-                        <td><strong>${c.nombre}</strong></td>
-                        <td>${productosCount}</td>
-                        <td>
-                            <span class="badge ${c.estado ? 'badge-success' : 'badge-danger'}">
-                                ${c.estado ? 'Activa' : 'Inactiva'}
-                            </span>
-                        </td>
-                        <td>
-                            <button class="btn btn-sm btn-warning" onclick="editarCategoria('${c.id}')">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn btn-sm btn-danger" onclick="eliminarCategoria('${c.id}')">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-        }
-        
-        function abrirModalCategoria(id = null) {
-            document.getElementById('modalCategoria').classList.add('active');
-            document.getElementById('tituloModalCategoria').textContent = id ? 'Editar Categoría' : 'Nueva Categoría';
-            
-            if (id) {
-                const c = sistema.categorias.find(x => x.id === id);
-                document.getElementById('catId').value = c.id;
-                document.getElementById('catNombre').value = c.nombre;
-                document.getElementById('catIcono').value = c.icono;
-                document.getElementById('catOrden').value = c.orden;
-                document.getElementById('catEstado').checked = c.estado;
-            } else {
-                document.getElementById('catId').value = '';
-                document.getElementById('catNombre').value = '';
-                document.getElementById('catIcono').value = '🌸';
-                document.getElementById('catOrden').value = sistema.categorias.length + 1;
-                document.getElementById('catEstado').checked = true;
-            }
-        }
-        
-        function guardarCategoria() {
-            const id = document.getElementById('catId').value;
-            const nombre = document.getElementById('catNombre').value.trim();
-            
-            if (!nombre) {
-                alert('El nombre es obligatorio');
-                return;
-            }
-            
-            const categoria = {
-                id: id || nombre.toLowerCase().replace(/\s+/g, '-'),
-                nombre,
-                icono: document.getElementById('catIcono').value || '🌸',
-                orden: parseInt(document.getElementById('catOrden').value) || 1,
-                estado: document.getElementById('catEstado').checked
-            };
-            
-            if (id) {
-                const index = sistema.categorias.findIndex(c => c.id === id);
-                sistema.categorias[index] = categoria;
-            } else {
-                sistema.categorias.push(categoria);
-            }
-            
-            guardarDatos();
-            renderizarCategorias();
-            cerrarModal('modalCategoria');
-        }
-        
-        function editarCategoria(id) {
-            abrirModalCategoria(id);
-        }
-        
-        function eliminarCategoria(id) {
-            const productosEnCategoria = sistema.productos.filter(p => p.categoria === id).length;
-            if (productosEnCategoria > 0) {
-                alert(`No puedes eliminar esta categoría porque tiene ${productosEnCategoria} productos. Mueve o elimina los productos primero.`);
-                return;
-            }
-            
-            if (!confirm('¿Eliminar esta categoría?')) return;
-            
-            sistema.categorias = sistema.categorias.filter(c => c.id !== id);
-            guardarDatos();
-            renderizarCategorias();
-        }
-        
-        // ==========================================
-        // GALERÍA DE FOTOS
-        // ==========================================
-        
-        function previsualizarFotos(input) {
-            const files = Array.from(input.files);
-            fotosTemp = [];
-            
-            const container = document.getElementById('previewFotos');
-            container.innerHTML = '';
-            
-            files.forEach((file, index) => {
-                if (file.size > 5 * 1024 * 1024) {
-                    alert(file.name + ' es muy grande (máx 5MB)');
-                    return;
-                }
+        <!-- Contenido -->
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-white">
+            <div class="max-w-2xl animate-fade-in">
+                <span class="inline-block px-4 py-1 bg-sb-rose/20 text-sb-rose-soft rounded-full text-sm font-medium mb-4 backdrop-blur-sm">
+                    💐 Desde 2010 en Costa Rica
+                </span>
+                <h2 class="font-serif text-4xl md:text-6xl lg:text-7xl leading-tight mb-6">
+                    Flores que cuentan<br>
+                    <span class="italic text-sb-rose-soft">tu historia</span>
+                </h2>
+                <p class="text-lg md:text-xl text-gray-200 mb-8 max-w-lg">
+                    Arreglos frescos, entrega el mismo día en San José. 
+                    Cada flor seleccionada a mano para tus momentos especiales.
+                </p>
                 
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    fotosTemp.push({
-                        nombre: file.name,
-                        data: e.target.result,
-                        tipo: file.type
-                    });
-                    
-                    container.innerHTML += `
-                        <div class="preview-item">
-                            <img src="${e.target.result}">
-                            <button class="remove" onclick="fotosTemp.splice(${fotosTemp.length - 1}, 1); this.parentElement.remove()">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                    `;
-                    
-                    document.getElementById('btnSubir').disabled = fotosTemp.length === 0;
-                };
-                reader.readAsDataURL(file);
-            });
-        }
-        
-        function subirFotos() {
-            if (fotosTemp.length === 0) return;
-            
-            const categoria = document.getElementById('categoriaFoto').value;
-            let subidas = 0;
-            
-            fotosTemp.forEach(foto => {
-                // Comprimir antes de guardar
-                comprimirImagen(foto.data, 1200, 0.8).then(comprimida => {
-                    // Guardar en el producto "galería" o crear sistema de fotos global
-                    // Por ahora, agregamos a un array de fotos globales
-                    if (!sistema.fotosGlobales) sistema.fotosGlobales = [];
-                    
-                    sistema.fotosGlobales.push({
-                        id: Date.now() + Math.random(),
-                        url: comprimida,
-                        categoria,
-                        fecha: new Date().toISOString()
-                    });
-                    
-                    subidas++;
-                    if (subidas === fotosTemp.length) {
-                        guardarDatos();
-                        fotosTemp = [];
-                        document.getElementById('previewFotos').innerHTML = '';
-                        document.getElementById('btnSubir').disabled = true;
-                        document.getElementById('inputFotos').value = '';
-                        alert(`${subidas} fotos subidas correctamente`);
-                        renderizarGaleria();
-                    }
-                });
-            });
-        }
-        
-        function renderizarGaleria() {
-            const container = document.getElementById('galeriaCompleta');
-            const fotos = sistema.fotosGlobales || [];
-            
-            // También mostrar fotos de productos
-            const fotosProductos = sistema.productos.flatMap(p => 
-                (p.imagenes || []).map(img => ({ url: img, categoria: 'producto', producto: p.nombre }))
-            );
-            
-            const todas = [...fotos, ...fotosProductos];
-            
-            container.innerHTML = todas.map((f, i) => `
-                <div class="preview-item">
-                    <img src="${f.url}">
-                    <div style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.7); color: white; padding: 5px; font-size: 0.75rem;">
-                        ${f.categoria} ${f.producto ? '- ' + f.producto : ''}
+                <div class="flex flex-wrap gap-4">
+                    <a href="catalogo.html" class="inline-flex items-center gap-2 bg-sb-rose hover:bg-red-700 text-white px-8 py-4 rounded-full font-semibold transition-all transform hover:scale-105 shadow-lg">
+                        Ver Catálogo
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="https://wa.me/50686053613" target="_blank" class="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur text-white border-2 border-white/30 px-8 py-4 rounded-full font-semibold transition-all">
+                        <i class="fab fa-whatsapp text-green-400"></i>
+                        WhatsApp Directo
+                    </a>
+                </div>
+                
+                <!-- Stats -->
+                <div class="flex gap-8 mt-12 pt-8 border-t border-white/20">
+                    <div>
+                        <p class="text-3xl font-bold text-sb-gold">14+</p>
+                        <p class="text-sm text-gray-300">Años de experiencia</p>
+                    </div>
+                    <div>
+                        <p class="text-3xl font-bold text-sb-gold">50k+</p>
+                        <p class="text-sm text-gray-300">Clientes felices</p>
+                    </div>
+                    <div>
+                        <p class="text-3xl font-bold text-sb-gold">2h</p>
+                        <p class="text-sm text-gray-300">Entrega express</p>
                     </div>
                 </div>
-            `).join('');
-        }
+            </div>
+        </div>
         
+        <!-- Scroll indicator -->
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+            <a href="#categorias" class="text-white/60 hover:text-white transition-colors">
+                <i class="fas fa-chevron-down text-2xl"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- Categorías -->
+    <section id="categorias" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h3 class="font-serif text-3xl md:text-4xl text-sb-dark mb-4">Nuestras Especialidades</h3>
+                <p class="text-gray-600 max-w-2xl mx-auto">Selecciona la categoría perfecta para cada ocasión</p>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6" id="categoriasGrid">
+                <!-- Se carga dinámicamente -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Productos Destacados -->
+    <section class="py-20 bg-sb-cream">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-end mb-12">
+                <div>
+                    <h3 class="font-serif text-3xl md:text-4xl text-sb-dark mb-2">Destacados del Mes</h3>
+                    <p class="text-gray-600">Los favoritos de nuestros clientes</p>
+                </div>
+                <a href="catalogo.html" class="hidden md:flex items-center gap-2 text-sb-green hover:text-sb-green-light font-medium transition-colors">
+                    Ver todo el catálogo
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="destacadosGrid">
+                <!-- Skeleton loading -->
+                <div class="skeleton rounded-2xl h-96"></div>
+                <div class="skeleton rounded-2xl h-96"></div>
+                <div class="skeleton rounded-2xl h-96"></div>
+                <div class="skeleton rounded-2xl h-96"></div>
+            </div>
+            
+            <div class="mt-8 text-center md:hidden">
+                <a href="catalogo.html" class="inline-flex items-center gap-2 text-sb-green font-medium">
+                    Ver todo el catálogo
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Proceso de Compra -->
+    <section class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h3 class="font-serif text-3xl md:text-4xl text-sb-dark mb-4">¿Cómo comprar?</h3>
+                <p class="text-gray-600">Tres simples pasos para sorprender a esa persona especial</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="text-center group">
+                    <div class="w-20 h-20 mx-auto mb-6 bg-sb-green/10 rounded-full flex items-center justify-center group-hover:bg-sb-green group-hover:text-white transition-all">
+                        <i class="fas fa-mouse-pointer text-2xl text-sb-green group-hover:text-white"></i>
+                    </div>
+                    <h4 class="font-serif text-xl mb-2">1. Elige</h4>
+                    <p class="text-gray-600">Selecciona el arreglo perfecto de nuestro catálogo</p>
+                </div>
+                
+                <div class="text-center group">
+                    <div class="w-20 h-20 mx-auto mb-6 bg-sb-rose/10 rounded-full flex items-center justify-center group-hover:bg-sb-rose group-hover:text-white transition-all">
+                        <i class="fas fa-map-marker-alt text-2xl text-sb-rose group-hover:text-white"></i>
+                    </div>
+                    <h4 class="font-serif text-xl mb-2">2. Indica</h4>
+                    <p class="text-gray-600">Marca tu ubicación en el mapa para calcular el express</p>
+                </div>
+                
+                <div class="text-center group">
+                    <div class="w-20 h-20 mx-auto mb-6 bg-sb-gold/10 rounded-full flex items-center justify-center group-hover:bg-sb-gold group-hover:text-white transition-all">
+                        <i class="fab fa-whatsapp text-2xl text-sb-gold group-hover:text-white"></i>
+                    </div>
+                    <h4 class="font-serif text-xl mb-2">3. Recibe</h4>
+                    <p class="text-gray-600">Paga por SINPE y recibe tu pedido en horas</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonios -->
+    <section class="py-20 bg-sb-green text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h3 class="font-serif text-3xl md:text-4xl mb-4">Lo que dicen nuestros clientes</h3>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-white/10 backdrop-blur rounded-2xl p-6">
+                    <div class="flex text-sb-gold mb-4">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <p class="mb-4">"Las rosas más frescas que he comprado. La entrega fue puntual y el arreglo exacto como en la foto."</p>
+                    <p class="font-medium text-sb-rose-soft">— María G., San José</p>
+                </div>
+                
+                <div class="bg-white/10 backdrop-blur rounded-2xl p-6">
+                    <div class="flex text-sb-gold mb-4">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <p class="mb-4">"El sistema de mapa para calcular el express es genial. Pagamos exacto lo que dijo la web."</p>
+                    <p class="font-medium text-sb-rose-soft">— Carlos M., Heredia</p>
+                </div>
+                
+                <div class="bg-white/10 backdrop-blur rounded-2xl p-6">
+                    <div class="flex text-sb-gold mb-4">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <p class="mb-4">"Mi mamá lloró de la emoción. El mensaje en la tarjeta quedó perfecto. Gracias Santa Bárbara."</p>
+                    <p class="font-medium text-sb-rose-soft">— Ana L., Cartago</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contacto" class="bg-sb-dark text-white pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8 mb-12">
+                <div>
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="text-2xl">🌸</span>
+                        <span class="font-serif text-xl font-bold">Santa Bárbara</span>
+                    </div>
+                    <p class="text-gray-400 text-sm">Flores frescas y arreglos personalizados en Costa Rica desde 2010.</p>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Enlaces</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="index.html" class="hover:text-white transition-colors">Inicio</a></li>
+                        <li><a href="catalogo.html" class="hover:text-white transition-colors">Catálogo</a></li>
+                        <li><a href="carrito.html" class="hover:text-white transition-colors">Carrito</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Contacto</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><i class="fab fa-whatsapp mr-2"></i>8605-3613</li>
+                        <li><i class="fas fa-envelope mr-2"></i>info@floristeriasantabarbara.com</li>
+                        <li><i class="fas fa-map-marker-alt mr-2"></i>San José, Costa Rica</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Horario</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li>Lunes - Sábado: 7am - 7pm</li>
+                        <li>Domingo: 8am - 2pm</li>
+                        <li>Express: Todos los días</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-gray-500 text-sm">&copy; 2024 Floristería Santa Bárbara. Todos los derechos reservados.</p>
+                <a href="admin/index.html" class="text-gray-600 hover:text-gray-400 text-sm">
+                    <i class="fas fa-lock mr-1"></i>Acceso Admin
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Flotante -->
+    <a href="https://wa.me/50686053613" target="_blank" 
+       class="fixed bottom-6 right-6 z-50 bg-green-500 hover:bg-green-600 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg transition-transform hover:scale-110 animate-pulse">
+        <i class="fab fa-whatsapp text-2xl"></i>
+    </a>
+
+    <script>
         // ==========================================
         // CONFIGURACIÓN
         // ==========================================
         
-        function cargarConfig() {
-            document.getElementById('configNombre').value = sistema.config.nombreNegocio;
-            document.getElementById('configWhatsapp').value = sistema.config.whatsapp;
-            document.getElementById('configTarifa').value = sistema.config.tarifaExpress;
-            document.getElementById('configHorario').value = sistema.config.horario;
-        }
+        const CONFIG = {
+            whatsapp: '50686053613',
+            tarifaExpress: 650, // ₡650 por km
+            floristeria: { lat: 9.9281, lng: -84.0907 } // San José
+        };
         
-        function guardarConfig() {
-            sistema.config.nombreNegocio = document.getElementById('configNombre').value;
-            sistema.config.whatsapp = document.getElementById('configWhatsapp').value;
-            sistema.config.tarifaExpress = parseInt(document.getElementById('configTarifa').value) || 650;
-            sistema.config.horario = document.getElementById('configHorario').value;
-            
-            guardarDatos();
-            alert('Configuración guardada');
+        // ==========================================
+        // DATOS (cargados desde JSON)
+        // ==========================================
+        
+        let productos = [];
+        let categorias = [];
+        
+        async function cargarDatos() {
+            try {
+                const response = await fetch('../data/products.json');
+                const data = await response.json();
+                productos = data.productos || [];
+                categorias = data.categorias || [];
+                
+                renderizarCategorias();
+                renderizarDestacados();
+                actualizarContadorCarrito();
+            } catch (error) {
+                console.error('Error cargando datos:', error);
+                mostrarErrorCarga();
+            }
         }
         
         // ==========================================
-        // BACKUP / IMPORTAR
+        // RENDERIZADO
         // ==========================================
         
-        function exportarDatos() {
-            const datos = {
-                sistema,
-                fecha: new Date().toISOString(),
-                version: '1.0'
-            };
+        function renderizarCategorias() {
+            const container = document.getElementById('categoriasGrid');
+            const activas = categorias.filter(c => c.activa);
             
-            const blob = new Blob([JSON.stringify(datos, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `floristeria_backup_${new Date().toISOString().split('T')[0]}.json`;
-            a.click();
-            URL.revokeObjectURL(url);
+            container.innerHTML = activas.map(cat => `
+                <a href="catalogo.html?cat=${cat.id}" 
+                   class="group relative overflow-hidden rounded-2xl aspect-square bg-gradient-to-br from-gray-100 to-gray-200 hover:shadow-xl transition-all">
+                    <div class="absolute inset-0 flex flex-col items-center justify-center p-4 text-center">
+                        <span class="text-4xl mb-3 transform group-hover:scale-110 transition-transform">${cat.icono}</span>
+                        <h4 class="font-serif text-lg text-sb-dark">${cat.nombre}</h4>
+                        <p class="text-sm text-gray-500 mt-1">${productos.filter(p => p.categoria === cat.id && p.activo).length} productos</p>
+                    </div>
+                    <div class="absolute inset-0 bg-sb-green/0 group-hover:bg-sb-green/5 transition-colors"></div>
+                </a>
+            `).join('');
         }
         
-        function importarDatos(input) {
-            const file = input.files[0];
-            if (!file) return;
+        function renderizarDestacados() {
+            const container = document.getElementById('destacadosGrid');
+            const destacados = productos
+                .filter(p => p.activo && p.destacado)
+                .slice(0, 4);
             
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                try {
-                    const datos = JSON.parse(e.target.result);
-                    if (confirm(`¿Restaurar backup del ${datos.fecha}? Esto reemplazará todos los datos actuales.`)) {
-                        sistema = datos.sistema;
-                        guardarDatos();
-                        cargarDatos();
-                        alert('Datos restaurados correctamente');
-                    }
-                } catch (err) {
-                    alert('Error al leer el archivo: ' + err.message);
-                }
-            };
-            reader.readAsText(file);
+            if (destacados.length === 0) {
+                // Si no hay destacados, mostrar los primeros 4 activos
+                destacados.push(...productos.filter(p => p.activo).slice(0, 4));
+            }
+            
+            container.innerHTML = destacados.map(p => {
+                const precio = p.precioTemporadaActivo && p.precioTemporada 
+                    ? p.precioTemporada 
+                    : p.precioRegular;
+                
+                const imagen = p.imagenes?.[0] || 'https://via.placeholder.com/400x400?text=Sin+Imagen';
+                
+                return `
+                    <div class="product-card bg-white rounded-2xl overflow-hidden shadow-md">
+                        <div class="relative aspect-square overflow-hidden bg-gray-100">
+                            <img src="${imagen}" alt="${p.nombre}" 
+                                 class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                                 loading="lazy"
+                                 onerror="this.src='https://via.placeholder.com/400x400?text=Sin+Imagen'">
+                            
+                            ${p.precioTemporadaActivo ? `
+                                <span class="absolute top-3 left-3 bg-sb-rose text-white px-3 py-1 rounded-full text-xs font-bold">
+                                    OFERTA
+                                </span>
+                            ` : ''}
+                            
+                            <div class="absolute inset-0 bg-black/0 hover:bg-black/20 transition-colors flex items-center justify-center opacity-0 hover:opacity-100">
+                                <a href="producto.html?id=${p.id}" class="bg-white text-sb-dark px-4 py-2 rounded-full font-medium transform translate-y-4 hover:translate-y-0 transition-all">
+                                    Ver detalle
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div class="p-4">
+                            <span class="text-xs text-gray-500 uppercase tracking-wider">${p.categoria}</span>
+                            <h4 class="font-serif text-lg text-sb-dark mt-1 mb-2 line-clamp-2">${p.nombre}</h4>
+                            <p class="text-gray-600 text-sm mb-3 line-clamp-2">${p.descripcion || ''}</p>
+                            
+                            <div class="flex items-baseline gap-2">
+                                <span class="text-2xl font-bold text-sb-green">₡${precio.toLocaleString()}</span>
+                                ${p.precioTemporadaActivo && p.precioRegular ? `
+                                    <span class="text-sm text-gray-400 line-through">₡${p.precioRegular.toLocaleString()}</span>
+                                ` : ''}
+                            </div>
+                            
+                            <button onclick="agregarAlCarrito(${p.id})" 
+                                    class="w-full mt-4 bg-sb-green hover:bg-sb-green-light text-white py-3 rounded-xl font-medium transition-colors flex items-center justify-center gap-2">
+                                <i class="fas fa-shopping-bag"></i>
+                                Agregar al carrito
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function mostrarErrorCarga() {
+            document.getElementById('destacadosGrid').innerHTML = `
+                <div class="col-span-full text-center py-12">
+                    <i class="fas fa-exclamation-circle text-4xl text-gray-400 mb-4"></i>
+                    <p class="text-gray-600">Error cargando el catálogo. <a href="catalogo.html" class="text-sb-green underline">Intentar de nuevo</a></p>
+                </div>
+            `;
+        }
+        
+        // ==========================================
+        // CARRITO
+        // ==========================================
+        
+        function agregarAlCarrito(productoId) {
+            const producto = productos.find(p => p.id === productoId);
+            if (!producto) return;
+            
+            let carrito = JSON.parse(sessionStorage.getItem('carrito') || '[]');
+            
+            const existente = carrito.find(item => item.id === productoId);
+            if (existente) {
+                existente.cantidad++;
+            } else {
+                const precio = producto.precioTemporadaActivo && producto.precioTemporada 
+                    ? producto.precioTemporada 
+                    : producto.precioRegular;
+                
+                carrito.push({
+                    id: producto.id,
+                    nombre: producto.nombre,
+                    precio: precio,
+                    imagen: producto.imagenes?.[0],
+                    cantidad: 1
+                });
+            }
+            
+            sessionStorage.setItem('carrito', JSON.stringify(carrito));
+            actualizarContadorCarrito();
+            
+            // Animación de confirmación
+            const btn = event.target;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check"></i> Agregado';
+            btn.classList.add('bg-green-600');
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.classList.remove('bg-green-600');
+            }, 1500);
+        }
+        
+        function actualizarContadorCarrito() {
+            const carrito = JSON.parse(sessionStorage.getItem('carrito') || '[]');
+            const total = carrito.reduce((sum, item) => sum + item.cantidad, 0);
+            
+            const badge = document.getElementById('cartCount');
+            if (total > 0) {
+                badge.textContent = total;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
         }
         
         // ==========================================
         // UTILIDADES
         // ==========================================
         
-        function cerrarModal(id) {
-            document.getElementById(id).classList.remove('active');
+        function toggleMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
         }
         
-        // Compresión de imágenes
-        function comprimirImagen(dataUrl, maxWidth, quality) {
-            return new Promise((resolve) => {
-                const img = new Image();
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    const scale = maxWidth / img.width;
-                    canvas.width = maxWidth;
-                    canvas.height = img.height * scale;
-                    
-                    const ctx = canvas.getContext('2d');
-                    ctx.fillStyle = '#FFFFFF';
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    
-                    resolve(canvas.toDataURL('image/jpeg', quality));
-                };
-                img.src = dataUrl;
-            });
-        }
-        
-        // Cerrar modal al hacer clic fuera
-        window.onclick = (e) => {
-            if (e.target.classList.contains('modal')) {
-                e.target.classList.remove('active');
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('shadow-md');
+            } else {
+                header.classList.remove('shadow-md');
             }
-        };
+        });
+        
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', cargarDatos);
     </script>
 </body>
 </html>
